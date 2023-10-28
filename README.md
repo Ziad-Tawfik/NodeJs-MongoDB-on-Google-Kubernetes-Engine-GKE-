@@ -22,9 +22,9 @@ Notes:
 ## Steps
 1. Clone this repo.
 
-```Shell
-git clone https://github.com/Ziad-Tawfik/NodeJs-MongoDB-on-Google-Kubernetes-Engine-GKE-.git
-```
+    ```Shell
+    git clone https://github.com/Ziad-Tawfik/NodeJs-MongoDB-on-Google-Kubernetes-Engine-GKE-.git
+    ```
 
 2. Open dev.tfvars to replace the following variables's data with yours:
     - **Project ID**
@@ -77,12 +77,12 @@ git clone https://github.com/Ziad-Tawfik/NodeJs-MongoDB-on-Google-Kubernetes-Eng
 10. Each time you refresh the page or a new client accessed the IP will increase the number of visits.
 
 11. We can verify the high availability of the infrastructure by taking down and pod of the mongodb and check if the same IP has the same number of visits as before and increased by one.
-   ```Shell
+    ```Shell
     kubectl delete pod mongo-0
-   ```
-   ![Before Deletion](/Images/pod1.png)
-   ![After Deletion](/Images/pod2.png)
-   ![Counter in Browser after deletion](/Images/webbrowser2.png)
+    ```
+    ![Before Deletion](/Images/pod1.png)
+    ![After Deletion](/Images/pod2.png)
+    ![Counter in Browser after deletion](/Images/webbrowser2.png)
 
 ----------
 
