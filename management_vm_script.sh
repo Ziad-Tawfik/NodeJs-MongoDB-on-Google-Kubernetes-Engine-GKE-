@@ -306,9 +306,9 @@ echo ""
 echo ""
 echo ""
 echo "#########################"
-echo "Wait 60 Seconds"
+echo "Wait 10 Seconds"
 echo "#########################"
-sleep 60
+sleep 10
 
 echo ""
 echo ""
@@ -323,9 +323,9 @@ echo ""
 echo ""
 echo ""
 echo "#########################"
-echo "Wait 60 Seconds"
+echo "Wait 10 Seconds"
 echo "#########################"
-sleep 60
+sleep 10
 
 
 echo ""
@@ -341,9 +341,9 @@ echo ""
 echo ""
 echo ""
 echo "#########################"
-echo "Wait 60 Seconds"
+echo "Wait 10 Seconds"
 echo "#########################"
-sleep 60
+sleep 10
 
 
 echo ""
@@ -375,9 +375,9 @@ echo ""
 echo ""
 echo ""
 echo "#########################"
-echo "Wait 60 Seconds"
+echo "Wait 30 Seconds"
 echo "#########################"
-sleep 60
+sleep 30
 
 
 echo ""

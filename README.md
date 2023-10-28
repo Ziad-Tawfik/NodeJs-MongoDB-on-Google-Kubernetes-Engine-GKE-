@@ -12,6 +12,7 @@ Notes:
 
 ----------
 ## Requirements
+- **Terraform** is installed on your machine.
 - GCP Account with **Billing Activated**.
 - Service Account with **Project Owner Access** for Terraform (Create it manually through GCP webUI, then download **json key** for this SA to use it in Terraform).
 ![TF Service Account](/Images/SA.png)
@@ -84,7 +85,31 @@ Notes:
     ![After Deletion](/Images/pod2.png)
     ![Counter in Browser after deletion](/Images/webbrowser2.png)
 
-----------
+12. To destroy the infrastructure, execute the below command.
 
-## Developer
+   ```Shell
+    terraform destroy --var-file dev.tfvars
+   ```
+----------
+## Behind The Scenes
+- **Terraform** will Create ***two service account***, one for the ***Management vm*** and the other one for the ***GKE cluster*** with the required permissions.
+
+- Set up a **Virtual Private Cloud (VPC)**, configure **two Subnets**, establish a **NAT Gateway** for **outbound Internet** access, define a **Firewall Rule** to enable **IAP (Identity-Aware Proxy)** access to the management virtual machine, and create an **Artifact Registry** to store Docker images.
+
+- Provision a **Management virtual machine**, deploy a **Google Kubernetes Engine (GKE)** cluster with a **node pool**, and associate **two service accounts** with them.
+
+- Startup script in the Management vm will clone this repo and create all required files in under ***/simple-node-app*** directory.
+
+- Executing **run.sh** located in **/simple-node-app** in the **management vm**, the following actions are performed:
+
+    - Authenticate Artifact Registery and GKE on the management vm.
+    
+    - Build docker images: **NodeJs**, **MongoDB**, **MongoDB Sidecar** (which facilitates automatic MongoDB configuration).
+
+    - Push the created images to the Artifact Registery.
+
+    - Apply all yaml files found under **/simple-node-app/kube** to the GKE
+
+----------
+## Author
 [Zyad M. Tawfik](https://www.linkedin.com/in/zyad-m-tawfik/)
