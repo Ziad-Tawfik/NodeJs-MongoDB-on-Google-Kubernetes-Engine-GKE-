@@ -1,0 +1,15 @@
+# loadbalancer-service.yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: loadbalancer-node
+  labels:
+    app: mynodejs
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 3000
+      protocol: TCP
+  selector:
+    app: mynodejs

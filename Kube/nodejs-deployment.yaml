@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mynodejs-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mynodejs
+  template:
+    metadata:
+      name: mynodejs-pod
+      labels:
+        app: mynodejs
+    spec:
+      containers:
+        - name: mynodejs-container
+          image: us-east4-docker.pkg.dev/gcp-project-402717/final-project-repository/mynode
+          env:
+            - name: DBuser
+              value: "admin"
+            - name: DBpass
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-key
+                  key: mongodb-root-password
+            - name: DBhosts
+              value: "mongo-0.mongo.default.svc.cluster.local:27017,mongo-1.mongo.default.svc.cluster.local:27017,mongo-2.mongo.default.svc.cluster.local:27017"
+          ports:
+            - containerPort: 3000
