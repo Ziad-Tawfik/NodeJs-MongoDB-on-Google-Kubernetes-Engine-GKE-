@@ -27,7 +27,7 @@ Notes:
     git clone https://github.com/Ziad-Tawfik/NodeJs-MongoDB-on-Google-Kubernetes-Engine-GKE-.git
     ```
 
-2. Open dev.tfvars to replace the following variables's data with yours:
+2. Open dev.tfvars to replace the following variables's data with yours using sed command as mentioned below:
     - **Project ID**
     - Path to **SA Json Key** file that you created and downloaded before.
     - **Optionally:** Artifact Repo ID or Regions & Zones of Subnets & VMs 
@@ -77,7 +77,7 @@ Notes:
 
 10. Each time you refresh the page or a new client accessed the IP will increase the number of visits.
 
-11. We can verify the high availability of the infrastructure by taking down and pod of the mongodb and check if the same IP has the same number of visits as before and increased by one.
+11. We can verify the high availability of the infrastructure by taking down any pod of mongodb and check if the same IP has the same number of visits as before and increased by one.
     ```Shell
     kubectl delete pod mongo-0
     ```
