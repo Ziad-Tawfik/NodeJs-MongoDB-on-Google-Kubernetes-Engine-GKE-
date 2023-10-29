@@ -87,9 +87,9 @@ Notes:
 
 12. To destroy the infrastructure, execute the below command.
 
-   ```Shell
+    ```Shell
     terraform destroy --var-file dev.tfvars
-   ```
+    ```
 ----------
 ## What Happens Behind-The-Scenes❓
 - **Terraform** will Create ***two service account***, one for the ***Management vm*** and the other one for the ***GKE cluster*** with the required permissions.
