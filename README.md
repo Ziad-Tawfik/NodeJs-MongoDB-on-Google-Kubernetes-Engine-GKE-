@@ -91,14 +91,31 @@ Notes:
     terraform destroy --var-file dev.tfvars
    ```
 ----------
-## Behind The Scenes
+## What Happens Behind-The-Scenes❓
 - **Terraform** will Create ***two service account***, one for the ***Management vm*** and the other one for the ***GKE cluster*** with the required permissions.
+
+    ![Created SAs](/Images/Created_SA.png)
 
 - Set up a **Virtual Private Cloud (VPC)**, configure **two Subnets**, establish a **NAT Gateway** for **outbound Internet** access, define a **Firewall Rule** to enable **IAP (Identity-Aware Proxy)** access to the management virtual machine, and create an **Artifact Registry** to store Docker images.
 
+    ![VPC](/Images/VPC.png)
+    ![Subnets](/Images/Subnets.png)
+    ![Nat Gateway](/Images/Cloud-Nat.png)
+    ![Firewall 1](/Images/allow-iap-firewall-1.png)
+    ![Firewall 3](/Images/allow-iap-firewall-3.png)
+    ![Artifact Registery](/Images/Artifact-Repo.png)
+
 - Provision a **Management virtual machine**, deploy a **Google Kubernetes Engine (GKE)** cluster with a **node pool**, and associate **two service accounts** with them.
 
-- Startup script in the Management vm will clone this repo and create all required files in under ***/simple-node-app*** directory.
+    ![Management VM](/Images/Management-VM.png)
+    ![Attached SA to Management VM](/Images/ManagemetVM-Attached-SA.png)
+    ![GKE Cluster](/Images/Kubernetes-Cluster.png)
+
+
+- Startup script in the Management vm will clone this repo and create all required files in under ***/simple-node-app*** directory. 
+    - 🌳 Files tree layout .
+
+    ![VM /simple-node-app tree](/Images/Vm-Tree.png)
 
 - Executing **run.sh** located in **/simple-node-app** in the **management vm**, the following actions are performed:
 
@@ -106,10 +123,20 @@ Notes:
     
     - Build docker images: **NodeJs**, **MongoDB**, **MongoDB Sidecar** (which facilitates automatic MongoDB configuration).
 
+        ![Run 1](/Images/Run1.png)
+
     - Push the created images to the Artifact Registery.
+
+        ![Run 2](/Images/Run2.png)
 
     - Apply all yaml files found under **/simple-node-app/kube** to the GKE
 
+        ![Run 3](/Images/Run3.png)
+        ![Run 4](/Images/Run4.png)
+        ![Run 5](/Images/Run5.png)
+
+
 ----------
-## Author
+
+## :mage_man: Author
 [Zyad M. Tawfik](https://www.linkedin.com/in/zyad-m-tawfik/)
