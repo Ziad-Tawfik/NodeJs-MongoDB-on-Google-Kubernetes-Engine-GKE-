@@ -113,7 +113,7 @@ Notes:
 
 
 - Startup script in the Management vm will clone this repo and create all required files in under ***/simple-node-app*** directory. 
-    - 🌳 Files tree layout .
+    - 🌳 Files tree layout.
 
     ![VM /simple-node-app tree](/Images/Vm-Tree.png)
 
