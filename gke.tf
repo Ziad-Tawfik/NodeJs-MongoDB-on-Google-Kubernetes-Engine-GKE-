@@ -6,7 +6,7 @@ resource "google_container_cluster" "my-private-cluster" {
   # creating the least possible node pool  
   remove_default_node_pool = true
   initial_node_count       = 1
-  network                  = google_compute_network.vpc_network.id
+  network                  = data.google_compute_network.vpc_network.id
   subnetwork               = google_compute_subnetwork.subnets[1].id
   deletion_protection      = false
 

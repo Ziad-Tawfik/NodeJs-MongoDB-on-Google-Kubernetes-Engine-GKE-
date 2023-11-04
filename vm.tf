@@ -6,7 +6,7 @@ resource "google_compute_instance" "management_vm" {
 
   # Attach the subnet
   network_interface {
-    network    = google_compute_network.vpc_network.id
+    network    = data.google_compute_network.vpc_network.id
     subnetwork = google_compute_subnetwork.subnets[0].id
   }
 

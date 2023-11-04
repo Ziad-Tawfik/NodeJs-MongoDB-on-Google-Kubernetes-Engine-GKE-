@@ -17,15 +17,15 @@ resource "google_compute_subnetwork" "subnets" {
   name                     = var.subnet_names[count.index]
   ip_cidr_range            = var.cidrs[count.index]
   region                   = var.subnet_regions[count.index]
-  network                  = google_compute_network.vpc_network.id
+  network                  = data.google_compute_network.vpc_network.id
   private_ip_google_access = true
-  depends_on               = [google_compute_network.vpc_network]
+  depends_on               = [data.google_compute_network.vpc_network]
 }
 
 # IAP Firewall
 resource "google_compute_firewall" "allow_iap" {
   name    = "allow-iap-tf"
-  network = google_compute_network.vpc_network.id
+  network = data.google_compute_network.vpc_network.id
   allow {
     protocol = "tcp"
     ports    = ["22"]
