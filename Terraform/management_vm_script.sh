@@ -6,6 +6,7 @@ sudo apt-get upgrade && sudo apt-get update -y
 # Install git
 sudo apt-get install git
 git clone https://github.com/Ziad-Tawfik/simple-node-app.git
+git clone https://github.com/Ziad-Tawfik/NodeJs-MongoDB-on-Google-Kubernetes-Engine-GKE-.git
 
 # Install Docker
 sudo curl -fsSL https://get.docker.com -o get-docker.sh
@@ -74,193 +75,7 @@ EOF
 
 
 
-#######################################################
-## Kubernetes Part ##
-#######################################################
-
-# Create Kube Dir
-mkdir -p /simple-node-app/kube
-
-# Google cloud ssd storage class
-sudo cat <<-EOF > /simple-node-app/kube/googlecloud_ssd.yaml
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: fast
-provisioner: kubernetes.io/gce-pd
-parameters:
-  type: pd-ssd
-EOF
-
-
-# Role Binding
-sudo cat <<-EOF > /simple-node-app/kube/rolebinding.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: default-view
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: view
-subjects:
-  - kind: ServiceAccount
-    name: default
-    namespace: default
-EOF
-
-
-# Load Balancer
-sudo cat <<-EOF > /simple-node-app/kube/loadbalancer.yaml
-# loadbalancer-service.yml
-apiVersion: v1
-kind: Service
-metadata:
-  name: loadbalancer-node
-  labels:
-    app: mynodejs
-spec:
-  type: LoadBalancer
-  ports:
-    - port: 80
-      targetPort: 3000
-      protocol: TCP
-  selector:
-    app: mynodejs
-EOF
-
-
-# nodejs
-sudo cat <<-EOF > /simple-node-app/kube/nodejs-deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: mynodejs-deployment
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: mynodejs
-  template:
-    metadata:
-      name: mynodejs-pod
-      labels:
-        app: mynodejs
-    spec:
-      containers:
-        - name: mynodejs-container
-          image: us-east4-docker.pkg.dev/gcp-project-402717/final-project-repository/mynode
-          env:
-            - name: DBuser
-              value: "admin"
-            - name: DBpass
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-key
-                  key: mongodb-root-password
-            - name: DBhosts
-              value: "mongo-0.mongo.default.svc.cluster.local:27017,mongo-1.mongo.default.svc.cluster.local:27017,mongo-2.mongo.default.svc.cluster.local:27017"
-          ports:
-            - containerPort: 3000
-EOF
-
-
-
-# mongo-key
-sudo cat <<-EOF > /simple-node-app/kube/mongokey.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: mongo-key
-data:
-  mongodb-root-password: cGFzc3dvcmQ=
-EOF
-
-
-
-# Mongo DB Statefulset
-sudo cat <<-EOF > /simple-node-app/kube/mongodb-statefulset.yaml
-#Create headless server
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: mongo
-  labels:
-    name: mongo
-spec:
-  ports:
-  - port: 27017
-    targetPort: 27017
-  clusterIP: None
-  selector:
-    role: mongo
----
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: mongo
-spec:
-  serviceName: "mongo"
-  replicas: 3
-  selector:
-    matchLabels:
-      role: mongo
-  template:
-    metadata:
-      labels:
-        role: mongo
-        environment: test
-    spec:
-      terminationGracePeriodSeconds: 10
-      containers:
-        - name: mongo
-          image: us-east4-docker.pkg.dev/gcp-project-402717/final-project-repository/mymongo
-          args: ["--auth", "--bind_ip_all", "--replSet", "rs0", "--keyFile", "/etc/secrets-volume/mongodb-keyfile"]
-          env:
-            - name: "MONGO_INITDB_ROOT_USERNAME"
-              value: "admin"
-            - name: "MONGO_INITDB_ROOT_PASSWORD"
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-key
-                  key: mongodb-root-password
-
-          ports:
-            - containerPort: 27017
-          volumeMounts:
-            - name: mongo-persistent-storage
-              mountPath: /data/db
-
-        - name: mongo-sidecar
-          image: us-east4-docker.pkg.dev/gcp-project-402717/final-project-repository/mymongosidecar
-          env:
-            - name: MONGO_SIDECAR_POD_LABELS
-              value: "role=mongo,environment=test"
-            - name: KUBERNETES_MONGO_SERVICE_NAME
-              value: "mongo"
-            - name: MONGODB_USERNAME
-              value: "admin"
-            - name: MONGODB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-key
-                  key: mongodb-root-password
-            - name: MONGODB_DATABASE
-              value: "admin"
-
-  volumeClaimTemplates:
-  - metadata:
-      name: mongo-persistent-storage
-      annotations:
-        volume.beta.kubernetes.io/storage-class: "fast"
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 1Gi
-EOF
-
+###############################################
 
 # Create a script to be executed in the vm
 sudo cat <<-EOF > /simple-node-app/run.sh
@@ -300,7 +115,7 @@ echo ""
 echo "#########################"
 echo "Create SSD Storage Class in K8s"
 echo "#########################"
-kubectl apply -f kube/googlecloud_ssd.yaml
+kubectl apply -f /NodeJs-MongoDB-on-Google-Kubernetes-Engine-GKE-/Kube/googlecloud_ssd.yaml
 
 echo ""
 echo ""
@@ -316,7 +131,7 @@ echo ""
 echo "#########################"
 echo "Create Mongokey in K8s"
 echo "#########################"
-kubectl apply -f kube/mongokey.yaml
+kubectl apply -f /NodeJs-MongoDB-on-Google-Kubernetes-Engine-GKE-/Kube/mongokey.yaml
 
 
 echo ""
@@ -334,7 +149,7 @@ echo ""
 echo "#########################"
 echo "Create Role Binding in K8s"
 echo "#########################"
-kubectl apply -f kube/rolebinding.yaml
+kubectl apply -f /NodeJs-MongoDB-on-Google-Kubernetes-Engine-GKE-/Kube/rolebinding.yaml
 
 
 echo ""
@@ -352,7 +167,7 @@ echo ""
 echo "#########################"
 echo "Create Mongo Statefulset in K8s"
 echo "#########################"
-kubectl apply -f kube/mongodb-statefulset.yaml
+kubectl apply -f /NodeJs-MongoDB-on-Google-Kubernetes-Engine-GKE-/Kube/mongo-statefulset.yaml
 
 
 echo ""
@@ -369,7 +184,7 @@ echo ""
 echo "#########################"
 echo "Create Nodejs Deployment"
 echo "#########################"
-kubectl apply -f kube/nodejs-deployment.yaml
+kubectl apply -f /NodeJs-MongoDB-on-Google-Kubernetes-Engine-GKE-/Kube/nodejs-deployment.yaml
 
 echo ""
 echo ""
@@ -386,7 +201,19 @@ echo ""
 echo "#########################"
 echo "Create Load Balancer Service"
 echo "#########################"
-kubectl apply -f kube/loadbalancer.yaml
+kubectl apply -f /NodeJs-MongoDB-on-Google-Kubernetes-Engine-GKE-/Kube/loadbalancer.yaml
+
+echo ""
+echo ""
+echo ""
+echo "#########################"
+echo "Wait 60 Seconds"
+echo "#########################"
+sleep 60
+
+echo ""
+echo ""
+kubectl get svc
 
 EOF
 
