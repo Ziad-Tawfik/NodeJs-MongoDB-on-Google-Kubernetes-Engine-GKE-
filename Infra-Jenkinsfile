@@ -46,4 +46,11 @@ pipeline {
             }
         }
     }
+    
+
+    post {
+            success {
+                build quietPeriod: 30, wait: false, job: 'appDeployJob'
+            }
+        }
 }

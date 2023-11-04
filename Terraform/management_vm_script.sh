@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Update the system
-sudo apt-get upgrade && sudo apt-get update-y
+sudo apt-get upgrade && sudo apt-get update -y
 
 # Install git
 sudo apt-get install git
