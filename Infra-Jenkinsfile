@@ -1,0 +1,49 @@
+pipeline {
+
+    agent any
+
+    parameters {
+        booleanParam(name: 'destroy', defaultValue: false, description: 'Destroy Infrastructure?')
+    }
+    
+
+    stages {
+        
+        stage('Clone Code from Git') {
+            steps {
+                 script{
+                            git branch: 'jenkins-branch', 
+                            url: 'https://github.com/Ziad-Tawfik/NodeJs-MongoDB-on-Google-Kubernetes-Engine-GKE-'
+                    }
+                }
+            }
+            
+        stage('Choose workspace & initialize') {
+            steps {
+                dir("Terraform"){
+                    echo 'Choosing Workspace .....'
+                    sh "echo 'Current Working Directory' && pwd"
+                    sh "terraform workspace list"
+                    sh "terraform workspace select -or-create dev"
+                    sh "terraform workspace list"
+                    sh "terraform init"
+                }
+            }
+        }
+
+        stage('Plan & Apply or Destroy') {
+            steps {
+                dir("Terraform") {
+                    script {
+                        if (params.destroy) {
+                            sh "terraform destroy --var-file=dev.tfvars -auto-approve"
+                        }
+                        else {
+                            sh "terraform apply --var-file=dev.tfvars -auto-approve"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

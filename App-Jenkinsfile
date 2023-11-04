@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Run Script on Management VM') {
+            steps {
+                
+                script {
+                    sh """
+                    #!/bin/bash
+                    echo -ne "\n\n\n\n" | gcloud compute ssh --zone "us-east1-b" "management-vm" --tunnel-through-iap --project "gcp-project-402717" -- << EOF
+                    hostname;
+                    cd /simple-node-app/;
+                    pwd;
+                    bash run.sh;
+                    exit 0;
+                    << EOF
+                    """
+                }
+            }
+        }
+    }
+}
