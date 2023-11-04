@@ -40,17 +40,12 @@ pipeline {
                         }
                         else {
                             sh "terraform apply --var-file=dev.tfvars -auto-approve"
+                            build quietPeriod: 30, wait: false, job: 'appDeployJob'
                         }
                     }
                 }
             }
         }
     }
-    
 
-    post {
-            success {
-                build quietPeriod: 30, wait: false, job: 'appDeployJob'
-            }
-        }
 }
