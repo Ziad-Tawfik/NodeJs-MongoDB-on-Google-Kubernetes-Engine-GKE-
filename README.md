@@ -1,4 +1,4 @@
-# High Available NodeJs App Connected to MongoDB on Google Kubernetes Engine (GKE)
+# Highly Available NodeJs App Connected to MongoDB on Google Kubernetes Engine (GKE)
 
 ![Architecture](/Images/Architecture.png)
 
