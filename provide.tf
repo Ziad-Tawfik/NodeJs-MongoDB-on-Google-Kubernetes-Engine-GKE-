@@ -1,5 +1,5 @@
 provider "google" {
-  credentials = var.jsonkey
+  # credentials = var.jsonkey
   project     = var.project
 }
 
