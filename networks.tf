@@ -1,10 +1,14 @@
 # VPC
-resource "google_compute_network" "vpc_network" {
-  name                    = "gcp-final-proj-vpc"
-  description             = "VPC for GCP final Project"
-  auto_create_subnetworks = false
-  routing_mode            = "REGIONAL"
-  depends_on              = [time_sleep.wait_project_init]
+# resource "google_compute_network" "vpc_network" {
+#   name                    = "gcp-final-proj-vpc"
+#   description             = "VPC for GCP final Project"
+#   auto_create_subnetworks = false
+#   routing_mode            = "REGIONAL"
+#   depends_on              = [time_sleep.wait_project_init]
+# }
+
+data "google_compute_network" "vpc_network" {
+  name = "gcp-final-proj-vpc"
 }
 
 # SUBNETS
