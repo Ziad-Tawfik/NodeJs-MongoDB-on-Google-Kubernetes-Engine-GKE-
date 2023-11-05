@@ -16,7 +16,7 @@ sudo unzip terraform_1.5.7_linux_amd64.zip -d /usr/local/bin/
 sudo rm terraform_1.5.7_linux_amd64.zip
 
 # Install Java
-sudo apt install -y openjdk-17-jre-headless
+sudo apt install -y openjdk-17-jre
 
 # Install Jenkins
 sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
