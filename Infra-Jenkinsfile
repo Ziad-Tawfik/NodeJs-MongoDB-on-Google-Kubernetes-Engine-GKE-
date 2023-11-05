@@ -12,7 +12,7 @@ pipeline {
         stage('Clone Code from Git') {
             steps {
                  script{
-                            git branch: 'jenkins-branch', 
+                            git branch: 'master', 
                             url: 'https://github.com/Ziad-Tawfik/NodeJs-MongoDB-on-Google-Kubernetes-Engine-GKE-'
                     }
                 }
