@@ -8,7 +8,7 @@ pipeline {
                 script {
                     sh """
                     #!/bin/bash
-                    echo -ne "\n\n\n\n" | gcloud compute ssh --zone "us-east1-b" "management-vm" --tunnel-through-iap --project "gcp-project-402717"
+                    yes '' | gcloud compute ssh --zone "us-east1-b" "management-vm" --tunnel-through-iap --project "gcp-project-402717"
                     """
                     sh "echo test"
                     sh """
