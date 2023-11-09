@@ -3,10 +3,6 @@ variable "project" {
   description = "Your GCP Project ID"
 }
 
-variable "jsonkey" {
-  type        = string
-  description = "Your service account json key path"
-}
 
 variable "services" {
   type = list(string)
