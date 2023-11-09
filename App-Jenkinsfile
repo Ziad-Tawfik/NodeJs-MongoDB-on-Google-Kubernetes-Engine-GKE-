@@ -6,11 +6,12 @@ pipeline {
             steps {
                 
                 script {
+                    sh "echo test1"
                     sh """
                     #!/bin/bash
-                    yes '' | gcloud compute ssh --zone "us-east1-b" "management-vm" --tunnel-through-iap --project "gcp-project-402717"
+                    echo -e "\n\n\n\n" | gcloud compute ssh --zone "us-east1-b" "management-vm" --tunnel-through-iap --project "gcp-project-402717"
                     """
-                    sh "echo test"
+                    sh "echo test2"
                     sh """
                     #!/bin/bash
                     gcloud compute ssh --zone "us-east1-b" "management-vm" --tunnel-through-iap --project "gcp-project-402717" -- << EOF
