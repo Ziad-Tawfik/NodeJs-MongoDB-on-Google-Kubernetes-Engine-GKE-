@@ -1,5 +1,4 @@
 project = "gcp-project-402717"
-jsonkey = "../gcp-project-402717-f30934e22471.json"
 artifact_repo_id = "final-project-repository"
 
 services = [

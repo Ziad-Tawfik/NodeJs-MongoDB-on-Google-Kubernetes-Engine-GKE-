@@ -1,6 +1,6 @@
 # Highly Available NodeJs App Connected to MongoDB on Google Kubernetes Engine (GKE)
 
-![Architecture](/Images/Architecture.png)
+![Architecture](/Images/gcp-arch-jenkins-gke.png)
 
 In this project I will deploy a simple Node.js web application **(stateless)** that interacts with a highly available MongoDB **(stateful)** replicated across **3 zones** and consisting of **1** primary and **2** secondaries.
 
@@ -9,12 +9,16 @@ Notes:
 - The **GKE cluster (private)** will NOT have access to the internet.
 - The **Management VM** will be used to manage the **GKE cluster** and **build/push** images to the **Artifact Registry**.
 - All deployed images must be stored in Artifact Registry.
+- Terraform will create infrastructure for **VPC** and **Jenkins** VM.
+- Two Jenkins pipelines:
+    - **1st pipeline** will use **terraform** to create the **Management VM** and **GKE**, then execute the **2nd pipeline**.
+    - **2nd pipeline** will deploy **NodeJS** and **MongoDB** application on **GKE**.
 
 ----------
 ## Requirements
 - **Terraform** is installed on your machine.
 - GCP Account with **Billing Activated**.
-- Service Account with **Project Owner Access** for Terraform (Create it manually through GCP webUI, then download **json key** for this SA to use it in Terraform).
+- Service Account with **Project Owner Access** for **Jenkins VM** (Create it manually through GCP webUI).
 ![TF Service Account](/Images/SA.png)
 - Enable **Service Usage API** in GCP for Terraform to be able to communicate with GCP || **[Service Usage API Activation Link](https://console.cloud.google.com/apis/api/serviceusage.googleapis.com)**.
 - Create a Project in GCP and get its ID.
@@ -27,32 +31,72 @@ Notes:
     git clone https://github.com/Ziad-Tawfik/NodeJs-MongoDB-on-Google-Kubernetes-Engine-GKE-.git
     ```
 
-2. Open dev.tfvars to replace the following variables's data with yours using sed command as mentioned below:
+2. Open **Jenkins-Infra-Terraform/dev-jenkins.tfvars** to replace the following variables's data with yours using sed command as mentioned below:   
+    - **SA account ID** that you created before with owner role.
     - **Project ID**
-    - Path to **SA Json Key** file that you created and downloaded before.
-    - **Optionally:** Artifact Repo ID or Regions & Zones of Subnets & VMs 
-    > ! Note that changing project id, artifact repo id, region or zone then you will have to modify other files and replace all the old names with the new ones using sed command as below or any other utility.
-    
+    - **Optionally:** Jenkins VM Subnet's Region & Zone & CIDR.
+
+    > ! Note that Jenkins VM, Management VM and GKE are all in the same VPC as per architecture above.
+
     ```Bash
     find /path/to/repo/folder -type f -exec sed -i 's/old-text/new-text/g' {} \;
     ```
 
-3. Open Bash shell in the cloned repo folder.
+3. Open **Terraform/dev.tfvars** to replace the following variables's data with yours using sed command as mentioned above:
+    - **Project ID**
+    - **Optionally:** Artifact Repo ID or Regions & Zones of Subnets & VMs.
 
-4. Execute the below commands to let terraform build the infrastructure.
+    > ! Note that changing project id, artifact repo id, region or zone then you will have to modify other files and replace all the old names with the new ones using sed command as below or any other utility.
+
+    > ! Note: You  can change the password of the **root login to the mongodb admin db** by modifying **Kube/mongokey.yaml**, and edit the mongodb-root-password with your password encoded in base64.
+    
+4. Push the project with your data to your repo.
+
+5. Open Bash shell in the cloned **Jenkins-Infra-Terraform** folder.
+
+6. Execute the below commands to let terraform build the infrastructure.
     ```Shell
     terraform init
-    terraform apply --var-file dev.tfvars
+    terraform apply --var-file dev-jenkins.tfvars
     ```
-5. Review terraform plan and enter (y) if all is good.
+7. Review terraform plan and enter (y) if all is good.
 
-6. Authenticate Google Cloud on your machine using account has admin access if you want to access the management vm from your terminal, 
+8. Get Jenkins VM IP from GCP UI, and access this IP on web browser through port 8080.
+
+    ![Jenkins VM](/Images/Jenkins-VM-Ext-IP.png)
+    ![Jenkins 1](/Images/Jenkins1.png)
+
+9. SSH into Jenkins VM through GCP SSH-in-Browser or using command line as below to get the admin password mentioned in the above path and walkthrough the installation process installing the suggested plugins and creating 
+
+    ![Jenkins 2](/Images/Jenkins2.png)
+    ![Jenkins 3](/Images/Jenkins3.png)
+    ![Jenkins 4](/Images/Jenkins4.png)
+    ![Jenkins 5](/Images/Jenkins5.png)
+
+10. Create a pipeline with any name to create the rest of infrastructure (Management VM + GKE + Artifact Repo), choose pipeline script from SCM, add your github repo and change the name of jenkins file script to Infra-Jenkinsfile
+
+    ![Jenkins 6](/Images/Jenkins6.png)
+    ![Jenkins 7](/Images/Jenkins7.png)
+    ![Jenkins 8](/Images/Jenkins8.png)
+
+11. Create a second pipeline named **appDeployJob** with the same above steps but the script name is App-Jenkinsfile
+
+    ![Jenkins 9](/Images/Jenkins9.png)
+    ![Jenkins 10](/Images/Jenkins10.png)
+
+12. Build the first pipeline and automatically after finishing it will start the second pipeline.
+
+    ![Jenkins 11](/Images/Jenkins11.png)
+    ![Jenkins 12](/Images/Jenkins12.png)
+    ![Jenkins 13](/Images/Jenkins13.png)
+
+8. Authenticate Google Cloud on your machine using account has admin access if you want to access the management vm from your terminal, 
     > Skip steps 6,7 if you are going to login to the management vm from GCP webUI.
 
     ```Shell
     gcloud init
     ```
-7. After terraform creating the infrastructure, ssh into the management vm using below command with **your project id and vm zone** or from **GCP webUI**.
+8. After terraform creating the infrastructure, ssh into the management vm using below command with **your project id and vm zone** or from **GCP webUI**.
     ```Shell
     gcloud compute ssh --zone "vm-zone" "management-vm" --tunnel-through-iap --project "your-project-id"
     ```

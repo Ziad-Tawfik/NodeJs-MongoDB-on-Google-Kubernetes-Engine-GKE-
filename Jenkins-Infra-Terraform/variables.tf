@@ -26,3 +26,7 @@ variable "jenkins_vm_zone" {
 variable "cidr" {
   type = string
 }
+
+variable "account_id" {
+  type = string
+}

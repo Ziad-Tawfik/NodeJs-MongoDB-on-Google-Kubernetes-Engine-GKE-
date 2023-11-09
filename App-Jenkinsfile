@@ -7,8 +7,12 @@ pipeline {
                 
                 script {
                     sh """
+                    #! bin/bash
+                    echo -ne "\n\n\n\n" | gcloud compute ssh --zone "us-east1-b" "management-vm" --tunnel-through-iap --project "gcp-project-402717"
+                    """
+                    sh """
                     #!/bin/bash
-                    echo -ne "\n\n\n\n" | gcloud compute ssh --zone "us-east1-b" "management-vm" --tunnel-through-iap --project "gcp-project-402717" -- << EOF
+                    gcloud compute ssh --zone "us-east1-b" "management-vm" --tunnel-through-iap --project "gcp-project-402717" -- << EOF
                     hostname;
                     cd /simple-node-app/;
                     pwd;
