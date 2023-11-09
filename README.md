@@ -118,10 +118,14 @@ Notes:
     ![After Deletion](/Images/pod2.png)
     ![Counter in Browser after deletion](/Images/webbrowser2.png)
 
-18. To destroy the infrastructure, execute the below command.
+18. To destroy the infrastructure, Build the infrastructure pipeline with destroy option checked.
+
+  ![Jenkins Destroy](/Images/Jenkins-Delete.png)
+
+19. To destroy the VPC and Jenkins VM, execute the below command in **Jenkins-Infra-Terraform** directory on your local machine.
 
     ```Shell
-    terraform destroy --var-file dev.tfvars
+    terraform destroy --var-file dev-jenkins.tfvars
     ```
 ----------
 ## What Happens Behind-The-Scenes❓
