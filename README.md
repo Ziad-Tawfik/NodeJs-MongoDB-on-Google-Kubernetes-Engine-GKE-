@@ -126,7 +126,7 @@ In this project I will deploy a simple Node.js web application **(stateless)** t
 
 18. To destroy the infrastructure, Build the infrastructure pipeline with destroy option checked.
 
-  ![Jenkins Destroy](/Images/Jenkins-Delete.png)
+    ![Jenkins Destroy](/Images/Jenkins-Delete.png)
 
 19. To destroy the VPC and Jenkins VM, execute the below command in **Jenkins-Infra-Terraform** directory on your local machine.
 
