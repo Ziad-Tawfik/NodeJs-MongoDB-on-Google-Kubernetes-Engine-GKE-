@@ -1,4 +1,4 @@
-project = "gcp-project-402717"
+project    = "gcp-project-402717"
 account_id = "sa-gcp-proj-tf"
 
 services = [

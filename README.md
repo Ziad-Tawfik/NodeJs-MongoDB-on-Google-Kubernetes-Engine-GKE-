@@ -1,10 +1,10 @@
-# Highly Available NodeJs App Connected to MongoDB on Google Kubernetes Engine (GKE)
+# Deploy a highly Available NodeJs App Connected to MongoDB on Google Kubernetes Engine (GKE) Using Terraform & Jenkins
 
 ![Architecture](/Images/gcp-arch-jenkins-gke.png)
 
 In this project I will deploy a simple Node.js web application **(stateless)** that interacts with a highly available MongoDB **(stateful)** replicated across **3 zones** and consisting of **1** primary and **2** secondaries.
 
-Notes:
+**Notes:**
 - Only the **Management VM (private)** will have access to internet through the **NAT**.
 - The **GKE cluster (private)** will NOT have access to the internet.
 - The **Management VM** will be used to manage the **GKE cluster** and **build/push** images to the **Artifact Registry**.
@@ -18,8 +18,12 @@ Notes:
 ## Requirements
 - **Terraform** is installed on your machine.
 - GCP Account with **Billing Activated**.
-- Service Account with **Project Owner Access** for **Jenkins VM** (Create it manually through GCP webUI).
-![TF Service Account](/Images/SA.png)
+- Service Account with **Project Owner Access** for **Jenkins VM** (Create it manually through GCP webUI), preferably named *(sa-gcp-proj-tf)*. 
+    > If you chose another SA name you will have to change it in all project file using sed command as illustrated in Steps section.
+
+    ![Jenkins + TF Service Account](/Images/SA.png)
+    ![Jenkins + TF SA attached roles](/Images/Jen-SA-Permissions.png)
+
 - Enable **Service Usage API** in GCP for Terraform to be able to communicate with GCP || **[Service Usage API Activation Link](https://console.cloud.google.com/apis/api/serviceusage.googleapis.com)**.
 - Create a Project in GCP and get its ID.
 
@@ -39,16 +43,16 @@ Notes:
     > ! Note that Jenkins VM, Management VM and GKE are all in the same VPC as per architecture above.
 
     ```Bash
-    find /path/to/repo/folder -type f -exec sed -i 's/old-text/new-text/g' {} \;
+    find </path/to/repo/folder> -type f -exec sed -i 's/<old-text>/<new-text>/g' {} \;
     ```
 
-3. Open **Terraform/dev.tfvars** to replace the following variables's data with yours using sed command as mentioned above:
+3. Open **Terraform/dev.tfvars** to replace the following variables' data with yours using sed command as mentioned above:
     - **Project ID**
     - **Optionally:** Artifact Repo ID or Regions & Zones of Subnets & VMs.
 
-    > ! Note that changing project id, artifact repo id, region or zone then you will have to modify other files and replace all the old names with the new ones using sed command as below or any other utility.
+    > ! Note that changing project id, artifact repo id, region or zone then you will have to modify other files and replace all the old names with the new ones using sed command as mentioned above or any other utility.
 
-    > ! Note: You  can change the password of the **root login to the mongodb admin db** by modifying **Kube/mongokey.yaml**, and edit the mongodb-root-password with your password encoded in base64.
+    > ! Note: You  can change the password of the **root login to the mongodb admin db** by modifying **Kube/mongokey.yaml**, and edit the *mongodb-root-password* with your password encoded in base64.
     
 4. Push the project with your data to your repo.
 
