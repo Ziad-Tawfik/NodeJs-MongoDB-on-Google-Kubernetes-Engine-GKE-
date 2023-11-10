@@ -19,6 +19,7 @@ sudo rm terraform_1.5.7_linux_amd64.zip
 sudo apt install -y openjdk-17-jre
 
 # Install Jenkins
+sleep 5
 sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
   https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
 sudo echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
@@ -26,6 +27,9 @@ sudo echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
   /etc/apt/sources.list.d/jenkins.list > /dev/null
 sudo apt-get update -y
 sudo apt-get install -y jenkins
+sleep 5
+sudo systemctl stop jenkins
+sudo systemctl enable --now jenkins
 
 # Install gcloud components
 sudo echo "deb [signed-by=/usr/share/keyrings/cloud.google.asc] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
