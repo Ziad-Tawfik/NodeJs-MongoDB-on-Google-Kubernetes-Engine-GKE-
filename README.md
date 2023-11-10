@@ -93,6 +93,8 @@ In this project I will deploy a simple Node.js web application **(stateless)** t
     ![Jenkins 11](/Images/Jenkins11.png)
     ![Jenkins 12](/Images/Jenkins12.png)
     ![Jenkins 13](/Images/Jenkins13.png)
+    ![Jenkins 14](/Images/Jenkins14.png)
+    ![Jenkins 15](/Images/Jenkins15.png)
 
 13. Authenticate Google Cloud on your machine using account has admin access if you want to access the management vm from your terminal, 
     > Skip steps 13,14 if you are going to login to the management vm from GCP webUI.
