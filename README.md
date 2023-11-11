@@ -4,6 +4,8 @@
 
 In this project I will deploy a simple Node.js web application **(stateless)** that interacts with a highly available MongoDB **(stateful)** replicated across **3 zones** and consisting of **1** primary and **2** secondaries.
 
+**Application Repo**: [Here](https://github.com/Ziad-Tawfik/simple-node-app.git)
+
 **Notes:**
 - Only the **Management VM (private)** will have access to internet through the **NAT**.
 - The **GKE cluster (private)** will NOT have access to the internet.
@@ -70,7 +72,7 @@ In this project I will deploy a simple Node.js web application **(stateless)** t
     ![Jenkins VM](/Images/Jenkins-VM-Ext-IP.png)
     ![Jenkins 1](/Images/Jenkins1.png)
 
-9. SSH into Jenkins VM through GCP SSH-in-Browser or using command line as below to get the admin password mentioned in the above path and walkthrough the installation process installing the suggested plugins and creating 
+9. SSH into Jenkins VM through GCP SSH-in-Browser or using command line as below to get the admin password mentioned in the above path and walkthrough the installation process installing the suggested plugins and creating an admin user.
 
     ![Jenkins 2](/Images/Jenkins2.png)
     ![Jenkins 3](/Images/Jenkins3.png)
